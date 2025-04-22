@@ -6,6 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Atualiza o sistema e instala dependências básicas
 RUN apt update && apt install -y \
     build-essential \
+    gcc \
+    g++ \
     cmake \
     git \
     wget \
