@@ -1,0 +1,27 @@
+{
+    "name": "Monitoramento Automatico",
+    "build": {
+      "dockerfile": "Dockerfile",
+      "context": ".."
+    },
+    "settings": {
+      "terminal.integrated.defaultProfile.linux": "bash"
+    },
+    "extensions": [
+      "ms-vscode.cpptools",
+      "ms-vscode.cmake-tools",
+      "ms-vscode.cpptools-extension-pack",
+      "ms-vscode.makefile-tools",
+      "ms-azuretools.vscode-docker",
+      "gruntfuggly.todo-tree",
+    "matepek.vscode-catch2-test-adapter"
+    ],
+    "mounts": [
+      "source=${localWorkspaceFolder},target=/workspace,type=bind"
+    ],
+    "remoteUser": "root",
+    "workspaceFolder": "/workspace",
+    "runArgs": [
+    	"--name=ubuntu-dev"
+    ]
+}
