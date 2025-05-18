@@ -1,12 +1,19 @@
 {
-    "name": "Monitoramento Automatico",
+    "name": "Ubuntu",
     "build": {
       "dockerfile": "Dockerfile",
+      "args": {
+        "VARIANT": "ubuntu-22.04"
+      },
       "context": ".."
     },
-    "settings": {
-      "terminal.integrated.defaultProfile.linux": "bash"
-    },
+    "runArgs": [
+      "--privileged",
+      "--device=/dev/net/tun",
+      "-e",
+    	"DISPLAY=${env:DISPLAY}"
+    ],
+    "settings": {},
     "extensions": [
       "ms-vscode.cpptools",
       "ms-vscode.cmake-tools",
@@ -14,14 +21,7 @@
       "ms-vscode.makefile-tools",
       "ms-azuretools.vscode-docker",
       "gruntfuggly.todo-tree",
-    "matepek.vscode-catch2-test-adapter"
+      "matepek.vscode-catch2-test-adapter"
     ],
-    "mounts": [
-      "source=${localWorkspaceFolder},target=/workspace,type=bind"
-    ],
-    "remoteUser": "root",
-    "workspaceFolder": "/workspace",
-    "runArgs": [
-    	"--name=ubuntu-dev"
-    ]
+    "remoteUser": "vscode"
 }
