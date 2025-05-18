@@ -26,3 +26,5 @@ RUN apt update && apt install -y \
 
 # Variáveis do toolchain
 ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /workspaces/Monitoramento-Automatico
