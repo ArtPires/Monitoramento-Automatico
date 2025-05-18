@@ -1,14 +1,14 @@
-FROM ubuntu:22.04
+ARG VARIANT="jammy"
 
-# Variáveis do toolchain
-ENV DEBIAN_FRONTEND=noninteractive
+FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
-# Atualiza o sistema e instala dependências básicas
+# Atualiza o sistema e instala os pacotes necessarios
 RUN apt update && apt install -y \
     build-essential \
     gcc \
     g++ \
     cmake \
+    make \
     git \
     wget \
     curl \
@@ -24,14 +24,5 @@ RUN apt update && apt install -y \
     python3-pip \
     && apt clean
 
-# Define o compilador padrão para cross-compilation
-ENV CC=aarch64-linux-gnu-gcc
-ENV CXX=aarch64-linux-gnu-g++
-
-# Diretório de trabalho
-WORKDIR /workspace
-
-# Entry point padrão
-CMD ["/bin/bash"]
-
-RUN echo "export PS1='\\u@ubuntu:\\w\\$ '" >> /root/.bashrc
+# Variáveis do toolchain
+ENV DEBIAN_FRONTEND=noninteractive
