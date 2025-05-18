@@ -23,5 +23,6 @@
       "gruntfuggly.todo-tree",
       "matepek.vscode-catch2-test-adapter"
     ],
-    "remoteUser": "vscode"
+    "remoteUser": "vscode",
+    "workspaceFolder": "/workspaces/Monitoramento-Automatico"
 }
