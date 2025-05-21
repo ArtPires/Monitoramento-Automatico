@@ -6,12 +6,12 @@
 
 #ifdef __aarch64__
 #include <wiringPi.h>
-void configRpiGPIO() {
-
+void configGPIO() {
     wiringPiSetup();
-    pinMode(0, OUTPUT);
-    digitalWrite(0, HIGH);
-    std::cout << "Pino 0 configurado como OUTPUT HIGH pela lib WiringPi!" << std::endl;
+    pinMode(11, OUTPUT);
+    pinMode(13, INPUT);
+    Log::info("Pino 11 configurado como OUTPUT");
+    Log::info("Pino 13 configurado como INPUT");
 }
 #endif
 
@@ -42,6 +42,17 @@ int main(int argc, char* argv[]) {
     Log::debug("teste debug");
     Log::warning("teste warning");
     Log::error("teste error");
+
+    configGPIO();
+
+    while (true)
+    {
+        Log::info(digitalRead(13));
+        digitalWrite(11, HIGH);
+        sleep(1);
+        digitalWrite(11, LOW);
+    }
+    
 
     return 0;
 }

@@ -28,20 +28,41 @@ public:
 
     static void setLogFile(std::string fileName);
     static void setLogLevel(LogLevel level);
-    static void log(LogLevel level, const std::string& message);
+    
+    template<typename T>
+    static void debug(const T& msg) {
+        log(LogLevel::DEBUG, toString(msg));
+    }
 
-    static void debug(const std::string& msg);
-    static void info(const std::string& msg);
-    static void warning(const std::string& msg);
-    static void error(const std::string& msg);
+    template<typename T>
+    static void info(const T& msg) {
+        log(LogLevel::INFO, toString(msg));
+    }
 
-private:
+    template<typename T>
+    static void warning(const T& msg) {
+        log(LogLevel::WARNING, toString(msg));
+    }
+
+    template<typename T>
+    static void error(const T& msg) {
+        log(LogLevel::ERROR, toString(msg));
+    }
+    
+    private:
     static LogLevel configLogLevel;
     static std::ofstream logFile;
-
+    
     static std::string getTimestamp();
     static std::string levelToString(LogLevel level);
+    static void log(LogLevel level, const std::string& message);
     
+    template<typename T>
+    static std::string toString(const T& value) {
+        std::ostringstream oss;
+        oss << value;
+        return oss.str();
+    }
 };
 
 #endif //_LOG_H_
