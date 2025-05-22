@@ -8,8 +8,9 @@
 #include <wiringPi.h>
 void configGPIO() {
     wiringPiSetup();
-    pinMode(11, OUTPUT);
-    pinMode(13, INPUT);
+    pinMode(0, OUTPUT);
+    pinMode(2, INPUT);
+    pullUpDnControl(2, PUD_DOWN);  // Usa resistor pull-down interno
     Log::info("Pino 11 configurado como OUTPUT");
     Log::info("Pino 13 configurado como INPUT");
 }
@@ -47,10 +48,14 @@ int main(int argc, char* argv[]) {
 
     while (true)
     {
-        Log::info(digitalRead(13));
-        digitalWrite(11, HIGH);
-        sleep(1);
-        digitalWrite(11, LOW);
+        Log::info(digitalRead(2));
+
+        if (digitalRead(2)){
+            digitalWrite(0, LOW);
+        } else {
+            digitalWrite(0, HIGH);
+        }
+        usleep(5000);
     }
     
 
