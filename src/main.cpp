@@ -1,25 +1,15 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "Log.h"
 #include "Commons.h"
+#include "SensorManager.h"
 
-#ifdef __aarch64__
-#include <wiringPi.h>
-void configGPIO() {
-    wiringPiSetup();
-    pinMode(0, OUTPUT);
-    pinMode(2, INPUT);
-    pullUpDnControl(2, PUD_DOWN);  // Usa resistor pull-down interno
-    Log::info("Pino 11 configurado como OUTPUT");
-    Log::info("Pino 13 configurado como INPUT");
-}
-#endif
+#define NO_ARGS 1
 
 void parseArgs(int argc, char* argv[]) {
     int opt;
 
-    if (argc == 1){ return; }
+    if (argc == NO_ARGS){ return; }
 
     opt = getopt(argc, argv, "d");
     switch (opt)
@@ -28,8 +18,7 @@ void parseArgs(int argc, char* argv[]) {
         Log::setLogLevel(LogLevel::DEBUG);
         break;
     default:
-        std::string str("Parametro invalido! Utilizar [-d] para habilitar o modo debug!");
-        Log::error(str);
+        Log::error("Parametro invalido! Utilizar [-d] para habilitar o modo debug!");
         break;
     }
     
@@ -39,25 +28,26 @@ int main(int argc, char* argv[]) {
 
     parseArgs(argc, argv);
 
-    Log::info("teste info");
-    Log::debug("teste debug");
-    Log::warning("teste warning");
-    Log::error("teste error");
+    Log::setLogFile(LOG_FILE_PATH);
 
-    configGPIO();
+    SensorManager sensorManager;
+    sensorManager.ConfigSensors();
 
-    while (true)
+    if (sensorManager.GetSensorStatus().status == SystemStatus::RUNNING){
+        systemStatus_ = SystemStatus::RUNNING;
+    }
+
+    while (systemStatus_ == SystemStatus::RUNNING)
     {
-        Log::info(digitalRead(2));
+        int read = sensorManager.ReadData(SOIL_MOISTURE_SENSOR);
 
-        if (digitalRead(2)){
-            digitalWrite(0, LOW);
+        if (read == 0){
+            sensorManager.WriteData(WATER_PUMP, ACTIVATE);
         } else {
-            digitalWrite(0, HIGH);
+            sensorManager.WriteData(WATER_PUMP, DEACTIVATE);
         }
-        usleep(5000);
+        usleep(1000000);
     }
     
-
     return 0;
 }

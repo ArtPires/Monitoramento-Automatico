@@ -7,6 +7,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include <sstream>
 
 #include "Commons.h"
 
@@ -31,22 +32,30 @@ public:
     
     template<typename T>
     static void debug(const T& msg) {
-        log(LogLevel::DEBUG, toString(msg));
+        std::ostringstream oss;
+        oss << msg;
+        log(LogLevel::DEBUG, oss.str());
     }
 
     template<typename T>
     static void info(const T& msg) {
-        log(LogLevel::INFO, toString(msg));
+        std::ostringstream oss;
+        oss << msg;
+        log(LogLevel::INFO, oss.str());
     }
 
     template<typename T>
     static void warning(const T& msg) {
-        log(LogLevel::WARNING, toString(msg));
+        std::ostringstream oss;
+        oss << msg;
+        log(LogLevel::WARNING, oss.str());
     }
 
     template<typename T>
     static void error(const T& msg) {
-        log(LogLevel::ERROR, toString(msg));
+        std::ostringstream oss;
+        oss << msg;
+        log(LogLevel::ERROR, oss.str());
     }
     
     private:

@@ -50,19 +50,3 @@ void Log::log(LogLevel level, const std::string& message) {
 
     std::cout << color << output << COLOR_RESET << std::endl;
 }
-
-// void Log::debug(const std::string& msg) {
-//     log(LogLevel::DEBUG, msg);
-// }
-
-// void Log::info(const std::string& msg) {
-//     log(LogLevel::INFO, msg);
-// }
-
-// void Log::warning(const std::string& msg) {
-//     log(LogLevel::WARNING, msg);
-// }
-
-// void Log::error(const std::string& msg) {
-//     log(LogLevel::ERROR, msg);
-// }

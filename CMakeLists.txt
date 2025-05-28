@@ -8,9 +8,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(
     ${CMAKE_SOURCE_DIR}/3rdparty/includes/wiringpi
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/test/include
 )
 
-file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE SRC_FILES 
+    ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/test/src/*.cpp
+)
 
 add_executable(AutoMonitor ${SRC_FILES})
 
