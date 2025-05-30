@@ -2,10 +2,12 @@
 
 MoistureSensorMock::MoistureSensorMock() {
     mockMoistureSensorStatus_ = SystemStatus::STARTING;
+    Log::debug("mockMoistureSensorStatus_: " + std::to_string(mockMoistureSensorStatus_));
 };
 
 MoistureSensorMock::~MoistureSensorMock() {
     mockMoistureSensorStatus_ = SystemStatus::ERROR;
+    Log::debug("mockMoistureSensorStatus_: " + std::to_string(mockMoistureSensorStatus_));
 };
 
 void MoistureSensorMock::configureSensor() {
@@ -19,7 +21,7 @@ uint8_t MoistureSensorMock::readData() {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(0, 254);
     data = static_cast<uint8_t>(dist(gen));
-    Log::info("MockMoistureSensor data: " + data);
+    Log::debug("MockMoistureSensor data: " + std::to_string(data));
     return data;
 };
 

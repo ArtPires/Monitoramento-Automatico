@@ -1,8 +1,10 @@
 #include <iostream>
 #include <unistd.h>
+#include <backward.hpp>
 
 #include "Commons.h"
 #include "SensorManager.h"
+#include "WaterPumpManager.h"
 
 #define NO_ARGS 1
 
@@ -25,29 +27,41 @@ void parseArgs(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
+    backward::SignalHandling sh;
 
     parseArgs(argc, argv);
 
     Log::setLogFile(LOG_FILE_PATH);
 
-    // SensorManager sensorManager;
-    // sensorManager.ConfigSensors();
+    WaterPumpManager* waterPumpManager = new WaterPumpManager();
+    
+    SensorManager* sensorManager = new SensorManager();
+    sensorManager->ConfigureSensors();
 
-    // if (sensorManager.GetSensorStatus().status == SystemStatus::RUNNING){
-    //     systemStatus_ = SystemStatus::RUNNING;
-    // }
+    systemStatus_ = SystemStatus::RUNNING;
+    for (auto& s : sensorManager->GetAllSensorsStatus()) {
+        if (s.status != SystemStatus::RUNNING) {
+            systemStatus_ == s.status;
+        }
+    }
 
-    // while (systemStatus_ == SystemStatus::RUNNING)
-    // {
-    //     int read = sensorManager.ReadData(SOIL_MOISTURE_SENSOR);
+    while (systemStatus_ == SystemStatus::RUNNING) {
+        uint8_t moisture = sensorManager->readMoisture();
+        uint8_t waterLevel = sensorManager->readWaterLevel();
 
-    //     if (read == 0){
-    //         sensorManager.WriteData(WATER_PUMP, ACTIVATE);
-    //     } else {
-    //         sensorManager.WriteData(WATER_PUMP, DEACTIVATE);
-    //     }
-    //     usleep(1000000);
-    // }
+        if (moisture >= 127 && waterLevel >= 127){
+            waterPumpManager->activate();
+        } else {
+            waterPumpManager->deactivate();
+        }
+        sleep(1);
+    }
+
+    delete(waterPumpManager);
+    delete(sensorManager);
+
+    Log::info("SystemStatus: " + systemStatus_);
+    Log::info("Finishing AutoMonitor...");
     
     return 0;
 }

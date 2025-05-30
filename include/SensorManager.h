@@ -14,7 +14,7 @@
 #include "MoistureSensorMock.h"
 #endif
 
-#define NUMBER_OF_SENSORS 1 // 0, 1, 2...
+#define NUMBER_OF_SENSORS 2 
 
 typedef struct __attribute__((packed)) {
     char sensorName[32];

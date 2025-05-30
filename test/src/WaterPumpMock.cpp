@@ -2,10 +2,12 @@
 
 WaterPumpMock::WaterPumpMock() {
     mockWaterPumpStatus_ = SystemStatus::RUNNING;
+    Log::debug("mockWaterPumpStatus_: " + std::to_string(mockWaterPumpStatus_));
 };
 
 WaterPumpMock::~WaterPumpMock() {
     mockWaterPumpStatus_ = SystemStatus::ERROR;
+    Log::debug("mockWaterPumpStatus_: " + std::to_string(mockWaterPumpStatus_));
 };
 
 void WaterPumpMock::activate() {
