@@ -1,12 +1,12 @@
 #include "Commons.h"
+#include "WaterPump.h"
 
-class WaterPumpMock {
+class WaterPumpMock : WaterPump{
 public:
-    WaterPumpMock(SystemStatus initialState);
+    WaterPumpMock();
     ~WaterPumpMock();
-
-    void digitalWrite(uint8_t data);
+    void activate();
+    void deactivate();
 private:
-    SystemStatus waterPumpState_;
-    uint8_t currentData_;
+    SystemStatus mockWaterPumpStatus_;
 };

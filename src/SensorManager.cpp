@@ -7,31 +7,13 @@ SensorManager::SensorManager() {
     Log::info("Sensores Configurados!");
 };
 
-SensorManager::~SensorManager() {
-    delete(waterPump_);
-};
+SensorManager::~SensorManager() { };
 
 void SensorManager::ConfigSensors() {
-    #ifdef __aarch64__ 
-        wiringPiSetup();
-        pinMode(WATER_PUMP, OUTPUT);
-        pinMode(SOIL_MOISTURE_SENSOR, INPUT);
-        pullUpDnControl(SOIL_MOISTURE_SENSOR, PUD_DOWN);  // Usa resistor pull-down interno
-        Log::debug("Pino 11 [WATER_PUMP] configurado como OUTPUT");
-        Log::debug("Pino 13 [SOIL_MOISTURE_SENSOR] configurado como INPUT com resistor pull-down");
-    #else
-        waterPump_ = new WaterPumpMock (SystemStatus::RUNNING);
-        Log::info("Utilizando sensores em modo Mock!");
-    #endif
-};
-
-void SensorManager::WriteData(uint8_t sensor, uint8_t data) {
-    Log::debug("Dado enviado: " + std::to_string(data));
-    #ifdef __aarch64__ 
-        digitalWrite(sensor, data);
-    #else
-        waterPump_->digitalWrite(data);
-    #endif
+    wiringPiSetup();
+    pinMode(SOIL_MOISTURE_SENSOR, INPUT);
+    pullUpDnControl(SOIL_MOISTURE_SENSOR, PUD_DOWN);  // Usa resistor pull-down interno
+    Log::debug("Pino 13 [SOIL_MOISTURE_SENSOR] configurado como INPUT com resistor pull-down");
 };
 
 uint8_t SensorManager::ReadData(uint8_t sensor) {

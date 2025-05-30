@@ -2,7 +2,7 @@
 #define _WATER_PUMP_MANAGER_H_
 
 #ifdef __aarch64__ 
-#include <wiringPi.h>
+#include "WaterPump.h"
 #else
 #include "WaterPumpMock.h"
 #endif
@@ -11,7 +11,7 @@
 
 typedef struct __attribute__((packed)) {
     SystemStatus status;
-    uint32_t lastTimeOk;
+    uint64_t lastTimeOk;
 } WaterPumpStatus;
 
 class WaterPumpManager {
@@ -21,16 +21,13 @@ public:
     void activate();
     void deactivate();
     WaterPumpStatus GetWaterPumpStatus();
-    void UpdateWaterPumpStatus(WaterPumpStatus status);
 private:
     WaterPumpStatus waterPumpStatus_;
-    
 #ifdef __aarch64__ 
-    
+    WaterPump* waterPump_;
 #else
     WaterPumpMock* waterPump_;
 #endif
-
 };
 
-#endif //_WATER_PLUMP_MANAGER_H_
+#endif //_WATER_PUMP_MANAGER_H_

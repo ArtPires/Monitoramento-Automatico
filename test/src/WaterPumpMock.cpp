@@ -1,13 +1,17 @@
 #include "WaterPumpMock.h"
 
-WaterPumpMock::WaterPumpMock(SystemStatus initialState) {
-    waterPumpState_ = initialState;
+WaterPumpMock::WaterPumpMock() {
+    mockWaterPumpStatus_ = SystemStatus::RUNNING;
 };
 
-WaterPumpMock::~WaterPumpMock(){
-    waterPumpState_ = SystemStatus::ERROR;
+WaterPumpMock::~WaterPumpMock() {
+    mockWaterPumpStatus_ = SystemStatus::ERROR;
 };
 
-void WaterPumpMock::digitalWrite(uint8_t data) {
-    currentData_ = data;
+void WaterPumpMock::activate() {
+    Log::info("MockWaterPump ACTIVATE");
+};
+
+void WaterPumpMock::deactivate() {
+    Log::info("MockWaterPump DEACTIVATE");
 };
