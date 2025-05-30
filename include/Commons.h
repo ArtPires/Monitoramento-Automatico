@@ -10,6 +10,14 @@
 #define LOG_FILE_PATH "/home/pi/logs/log.txt"
 #else
 #define LOG_FILE_PATH "/workspaces/logs/log.txt"
+
+// Stubs para testes em x86
+#define	INPUT   0
+#define	OUTPUT  1
+inline void wiringPiSetup() {}
+inline void pinMode(int, int) {}
+inline void digitalWrite(int, int) {}
+inline int digitalRead(int) { return 0; }
 #endif
 
 #define WATER_PUMP 0 // GPIO WiringPi 0 | Raspberry Pi pin 11
