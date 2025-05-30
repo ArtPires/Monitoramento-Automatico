@@ -15,3 +15,7 @@ void WaterPumpMock::activate() {
 void WaterPumpMock::deactivate() {
     Log::info("MockWaterPump DEACTIVATE");
 };
+
+SystemStatus WaterPumpMock::getStatus() {
+    return mockWaterPumpStatus_;
+};

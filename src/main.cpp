@@ -30,24 +30,24 @@ int main(int argc, char* argv[]) {
 
     Log::setLogFile(LOG_FILE_PATH);
 
-    SensorManager sensorManager;
-    sensorManager.ConfigSensors();
+    // SensorManager sensorManager;
+    // sensorManager.ConfigSensors();
 
-    if (sensorManager.GetSensorStatus().status == SystemStatus::RUNNING){
-        systemStatus_ = SystemStatus::RUNNING;
-    }
+    // if (sensorManager.GetSensorStatus().status == SystemStatus::RUNNING){
+    //     systemStatus_ = SystemStatus::RUNNING;
+    // }
 
-    while (systemStatus_ == SystemStatus::RUNNING)
-    {
-        int read = sensorManager.ReadData(SOIL_MOISTURE_SENSOR);
+    // while (systemStatus_ == SystemStatus::RUNNING)
+    // {
+    //     int read = sensorManager.ReadData(SOIL_MOISTURE_SENSOR);
 
-        if (read == 0){
-            sensorManager.WriteData(WATER_PUMP, ACTIVATE);
-        } else {
-            sensorManager.WriteData(WATER_PUMP, DEACTIVATE);
-        }
-        usleep(1000000);
-    }
+    //     if (read == 0){
+    //         sensorManager.WriteData(WATER_PUMP, ACTIVATE);
+    //     } else {
+    //         sensorManager.WriteData(WATER_PUMP, DEACTIVATE);
+    //     }
+    //     usleep(1000000);
+    // }
     
     return 0;
 }

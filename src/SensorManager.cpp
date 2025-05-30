@@ -1,37 +1,68 @@
 #include "SensorManager.h"
 
 SensorManager::SensorManager() {
-    SensorStatus newStatus;
-    newStatus.status = SystemStatus::RUNNING;
-    UpdateSensorStatus(newStatus);
-    Log::info("Sensores Configurados!");
+#ifdef __aarch64__
+    moistureSensor_ = new MoistureSensor();
+    waterLevelSensor_ = new WaterLevelSensor();
+#else
+    moistureSensor_ = new MoistureSensorMock();
+    waterLevelSensor_ = new WaterLevelSensorMock();
+    Log::debug("Using sensors in Mock mode!");
+#endif    
 };
 
-SensorManager::~SensorManager() { };
-
-void SensorManager::ConfigSensors() {
-    wiringPiSetup();
-    pinMode(SOIL_MOISTURE_SENSOR, INPUT);
-    pullUpDnControl(SOIL_MOISTURE_SENSOR, PUD_DOWN);  // Usa resistor pull-down interno
-    Log::debug("Pino 13 [SOIL_MOISTURE_SENSOR] configurado como INPUT com resistor pull-down");
+SensorManager::~SensorManager() { 
+    delete(moistureSensor_);
+    delete(waterLevelSensor_);
 };
 
-uint8_t SensorManager::ReadData(uint8_t sensor) {
-    uint8_t data;
-    #ifdef __aarch64__ 
-        data = digitalRead(sensor);
-        Log::debug("Dado recebido: " + std::to_string(data));
-    #else
-        Log::info("Nao foi possivel ler os dados do sensor, executando em ambiente x86_64!");
-        data = 0xFF;
-    #endif
-    return data;
+void SensorManager::ConfigureSensors() {
+    moistureSensor_->configureSensor();
+    waterLevelSensor_->configureSensor();
 };
 
-SensorStatus SensorManager::GetSensorStatus() {
-    return sensorStatus_;
+uint8_t SensorManager::readMoisture() {
+    return moistureSensor_->readData();
 };
 
-void SensorManager::UpdateSensorStatus(SensorStatus status) {
-    sensorStatus_ = status;
+uint8_t SensorManager::readWaterLevel() {
+    return waterLevelSensor_->readData();
+};
+
+std::array<SensorStatus, NUMBER_OF_SENSORS> SensorManager::GetAllSensorsStatus() {
+    strncpy(allSensorsStatus_[0].sensorName, "MOISTURE_SENSOR", sizeof(allSensorsStatus_[0].sensorName));
+    allSensorsStatus_[0].status = moistureSensor_->getStatus();
+    if (moistureSensor_->getStatus() == SystemStatus::RUNNING){
+        allSensorsStatus_[0].lastTimeOk = getTimeNow();
+    }
+
+    strncpy(allSensorsStatus_[1].sensorName, "WATER_LEVEL_SENSOR", sizeof(allSensorsStatus_[0].sensorName));
+    allSensorsStatus_[1].status = waterLevelSensor_->getStatus();
+    if (waterLevelSensor_->getStatus() == SystemStatus::RUNNING){
+        allSensorsStatus_[1].lastTimeOk = getTimeNow();
+    }
+
+    return allSensorsStatus_;
+};
+
+SensorStatus SensorManager::GetMoistureSensorStatus() {
+    SensorStatus moistureSensorStatus;
+    strncpy(moistureSensorStatus.sensorName, "MOISTURE_SENSOR", sizeof(allSensorsStatus_[0].sensorName));
+    moistureSensorStatus.status = moistureSensor_->getStatus();
+    if (moistureSensor_->getStatus() == SystemStatus::RUNNING){
+        moistureSensorStatus.lastTimeOk = getTimeNow();
+    }
+
+    return moistureSensorStatus;
+};
+
+SensorStatus SensorManager::GetWaterLevelSensorStatus() {
+    SensorStatus waterLevelSensorStatus;
+    strncpy(waterLevelSensorStatus.sensorName, "WATER_LEVEL_SENSOR", sizeof(allSensorsStatus_[0].sensorName));
+    waterLevelSensorStatus.status = waterLevelSensor_->getStatus();
+    if (waterLevelSensor_->getStatus() == SystemStatus::RUNNING){
+        waterLevelSensorStatus.lastTimeOk = getTimeNow();
+    }
+
+    return waterLevelSensorStatus;
 };

@@ -6,13 +6,17 @@
 #include "Log.h"
 
 #ifdef __aarch64__
+#include <wiringPi.h>
 #define LOG_FILE_PATH "/home/pi/logs/log.txt"
 #else
 #define LOG_FILE_PATH "/workspaces/logs/log.txt"
 #endif
 
 #define WATER_PUMP 0 // GPIO WiringPi 0 | Raspberry Pi pin 11
-#define SOIL_MOISTURE_SENSOR 2 // GPIO WiringPi 2 | Raspberry Pi pin 13
+
+// TODO(artur.pires): Change pins to I2C pin (WiringPi 8 / Raspberry Pi pin 3)
+#define MOISTURE_SENSOR 2 // GPIO WiringPi 2 | Raspberry Pi pin 13
+#define WATER_LEVEL_SENSOR 8 // GPIO WiringPi 2 | Raspberry Pi pin 13
 
 #define ACTIVATE 0
 #define DEACTIVATE 1
@@ -33,21 +37,21 @@ enum WaterLevel : uint8_t{
 
 static uint8_t systemStatus_ = SystemStatus::STARTING;
 
-int wiringpi_to_physical[30] = {
+inline int wiringpi_to_physical[30] = {
     11, 12, 13, 15, 16, 18, 22, 7, 3, 5,
     24, 26, 19, 21, 23, 8, 10, -1, -1, -1,
     -1, 29, 31, 33, 35, 37, 32, 36, 38, 40
 };
 
-int get_physical_pin(int wp_pin) {
+inline int get_physical_pin(int wp_pin) {
     if (wp_pin >= 0 && wp_pin < 30)
         return wiringpi_to_physical[wp_pin];
     return -1;
 };
 
-uint64_t getTimeNow(){
+inline uint64_t getTimeNow(){
     auto now = std::chrono::system_clock::now();
     return static_cast<uint64_t>(std::chrono::system_clock::to_time_t(now));
-}
+};
 
 #endif //_COMMONS_H_

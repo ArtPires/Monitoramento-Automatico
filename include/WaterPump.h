@@ -1,8 +1,6 @@
 #ifndef _WATER_PUMP_H_
 #define _WATER_PUMP_H_
 
-#include <wiringPi.h>
-
 #include "Commons.h"
 
 class WaterPump {
