@@ -37,16 +37,11 @@ int main(int argc, char* argv[]) {
 
     auto sensorManager = std::make_unique<SensorManager>();
     sensorManager->ConfigureSensors();
-
-    Log::info("SystemStatus 1: " + std::to_string(systemStatus_));
     
     systemStatus_ = SystemStatus::RUNNING;
-    Log::info("SystemStatus 2: " + std::to_string(systemStatus_));
     
     for (auto& s : sensorManager->GetAllSensorsStatus()) {
-        Log::info("s.status: " + std::to_string(s.status));
         if (s.status != SystemStatus::RUNNING) {
-            Log::info("SystemStatus 3: " + std::to_string(systemStatus_));
             systemStatus_ = s.status;
         }
     }
@@ -76,7 +71,7 @@ int main(int argc, char* argv[]) {
         sleep(1);
     }
 
-    Log::info("SystemStatus 4: " + std::to_string(systemStatus_));
+    Log::info("SystemStatus: " + std::to_string(systemStatus_));
     Log::info("Finishing AutoMonitor...");
 
     return 0;

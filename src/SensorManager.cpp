@@ -32,14 +32,12 @@ uint8_t SensorManager::readWaterLevel() {
 std::array<SensorStatus, NUMBER_OF_SENSORS> SensorManager::GetAllSensorsStatus() {
     strncpy(allSensorsStatus_[0].sensorName, "MOISTURE_SENSOR", sizeof(allSensorsStatus_[0].sensorName));
     allSensorsStatus_[0].status = moistureSensor_->getStatus();
-    Log::info("allSensorsStatus_0: " + std::to_string(allSensorsStatus_[0].status));
     if (moistureSensor_->getStatus() == SystemStatus::RUNNING){
         allSensorsStatus_[0].lastTimeOk = getTimeNow();
     }
 
     strncpy(allSensorsStatus_[1].sensorName, "WATER_LEVEL_SENSOR", sizeof(allSensorsStatus_[0].sensorName));
     allSensorsStatus_[1].status = waterLevelSensor_->getStatus();
-    Log::info("allSensorsStatus_1: " + std::to_string(allSensorsStatus_[1].status));
     if (waterLevelSensor_->getStatus() == SystemStatus::RUNNING){
         allSensorsStatus_[1].lastTimeOk = getTimeNow();
     }
