@@ -1,3 +1,7 @@
 [submodule "WiringPi"]
 	path = 3rdparty/WiringPi
 	url = https://github.com/WiringPi/WiringPi.git
+
+[submodule "backward-cpp"]
+	path = 3rdparty/backward-cpp
+	url = https://github.com/bombela/backward-cpp.git

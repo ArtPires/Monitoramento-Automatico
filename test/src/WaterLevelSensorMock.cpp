@@ -12,6 +12,7 @@ WaterLevelSensorMock::~WaterLevelSensorMock() {
 };
 
 void WaterLevelSensorMock::configureSensor() {
+    mockWaterLevelSensorStatus_ = SystemStatus::RUNNING;
     Log::info("WaterLevelSensor Configured");
 };
 

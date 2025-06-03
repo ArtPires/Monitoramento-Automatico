@@ -11,8 +11,8 @@ MoistureSensorMock::~MoistureSensorMock() {
 };
 
 void MoistureSensorMock::configureSensor() {
-    Log::info("MockMoistureSensor Configured");
     mockMoistureSensorStatus_ = SystemStatus::RUNNING;
+    Log::info("MockMoistureSensor Configured");
 };
 
 uint8_t MoistureSensorMock::readData() {
