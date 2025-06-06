@@ -25,6 +25,7 @@ RUN apt update && apt install -y \
     libdw-dev \
     libbfd-dev \
     binutils-dev \
+    libunwind-dev \
     && apt clean
 
 # Variáveis do toolchain
