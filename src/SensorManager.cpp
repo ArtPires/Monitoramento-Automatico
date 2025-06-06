@@ -1,20 +1,20 @@
 #include "SensorManager.h"
 
 SensorManager::SensorManager() {
+    Log::info("Starting SensorManager...");    
 #ifdef __aarch64__
-    moistureSensor_ = new MoistureSensor();
-    waterLevelSensor_ = new WaterLevelSensor();
+    moistureSensor_ = std::make_shared<MoistureSensor>();
+    waterLevelSensor_ = std::make_shared<WaterLevelSensor>();
 #else
-    moistureSensor_ = new MoistureSensorMock();
-    waterLevelSensor_ = new WaterLevelSensorMock();
+    moistureSensor_ = std::make_shared<MoistureSensorMock>();
+    waterLevelSensor_ = std::make_shared<WaterLevelSensorMock>();
     Log::debug("Using sensors in Mock mode!");
 #endif    
 };
 
-SensorManager::~SensorManager() { 
-    delete(moistureSensor_);
-    delete(waterLevelSensor_);
-};
+SensorManager::~SensorManager() {
+    Log::info("SensorManager Stopped!");
+}
 
 void SensorManager::ConfigureSensors() {
     moistureSensor_->configureSensor();

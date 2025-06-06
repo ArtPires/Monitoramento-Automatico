@@ -14,18 +14,28 @@ TcpServer::~TcpServer() {
 }
 
 void TcpServer::start() {
+    if (is_running_) return;
+
     is_running_ = true;
     server_thread_ = std::thread(&TcpServer::run, this);
 }
 
 void TcpServer::stop() {
+    if (!is_running_) return;
+
     is_running_ = false;
+
+    if (server_fd_ != -1) {
+        shutdown(server_fd_, SHUT_RDWR);
+        close(server_fd_);
+        server_fd_ = -1;
+    }
+
     if (server_thread_.joinable()) {
         server_thread_.join();
     }
-    if (server_fd_ > 0) {
-        close(server_fd_);
-    }
+
+    Log::info("Stopping TcpServer...");
 }
 
 void TcpServer::run() {
@@ -34,12 +44,12 @@ void TcpServer::run() {
     int addrlen = sizeof(address);
 
     if ((server_fd_ = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        perror("Socket failed");
+        Log::error("Socket failed");
         return;
     }
 
     if (setsockopt(server_fd_, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-        perror("setsockopt");
+        Log::error("setsockopt failed");
         return;
     }
 
@@ -48,23 +58,23 @@ void TcpServer::run() {
     address.sin_port = htons(port_);
 
     if (bind(server_fd_, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        perror("bind failed");
+        Log::error("bind failed");
         return;
     }
 
     if (listen(server_fd_, 3) < 0) {
-        perror("listen");
+        Log::error("listen failed");
         return;
     }
 
-    std::cout << "TCP Command Server ouvindo na porta " << port_ << std::endl;
+    Log::info("TCPServer listening at port " + std::to_string(port_));
 
     while (is_running_) {
         int new_socket;
         if ((new_socket = accept(server_fd_, (struct sockaddr *)&address,
                                  (socklen_t*)&addrlen)) < 0) {
-            if (!is_running_) break;
-            perror("accept");
+            if (!is_running_) break;  // encerrando
+            Log::error("accept failed");
             continue;
         }
 
@@ -79,14 +89,16 @@ void TcpServer::handleClient(int client_socket) {
     while ((valread = read(client_socket, buffer, sizeof(buffer) - 1)) > 0) {
         buffer[valread] = '\0';
         std::string command(buffer);
-        
-        // Remove \r\n e espaços extras
-        command.erase(command.find_last_not_of(" \r\n")+1);
 
-        std::cout << "Comando recebido via TCP: " << command << std::endl;
+        // Remove espaços e quebras de linha no início e fim
+        command.erase(0, command.find_first_not_of(" \r\n"));
+        command.erase(command.find_last_not_of(" \r\n") + 1);
+
+        Log::debug("Command received: " + command);
 
         handler_(command);
     }
 
+    shutdown(client_socket, SHUT_RDWR);
     close(client_socket);
 }

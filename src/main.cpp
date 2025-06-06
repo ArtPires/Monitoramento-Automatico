@@ -1,5 +1,4 @@
 #include <iostream>
-#include <memory>
 #include <unistd.h>
 #include <backward.hpp>
 
@@ -51,8 +50,10 @@ int main(int argc, char* argv[]) {
             waterPumpManager->activate();
         } else if (cmd == "deactivate") {
             waterPumpManager->deactivate();
+        } else if (cmd == "stop") {
+            systemStatus_ = SystemStatus::STOPPING;
         } else {
-            std::cout << "Comando desconhecido: " << cmd << std::endl;
+            Log::warning("Unknown command: " + cmd);
         }
     };
 
@@ -64,9 +65,9 @@ int main(int argc, char* argv[]) {
         uint8_t waterLevel = sensorManager->readWaterLevel();
 
         if (moisture >= 127 && waterLevel >= 127) {
-            //waterPumpManager->activate();
+            waterPumpManager->activate();
         } else {
-            //waterPumpManager->deactivate();
+            waterPumpManager->deactivate();
         }
         sleep(1);
     }

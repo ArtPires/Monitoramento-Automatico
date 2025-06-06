@@ -2,6 +2,7 @@
 #define _COMMONS_H_
 
 #include <cstdint>
+#include <memory>
 
 #include "Log.h"
 

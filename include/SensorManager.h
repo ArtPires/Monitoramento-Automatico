@@ -36,11 +36,11 @@ private:
     std::array<SensorStatus, NUMBER_OF_SENSORS> allSensorsStatus_;
 
 #ifdef __aarch64__ 
-    MoistureSensor* moistureSensor_;
-    WaterLevelSensor* waterLevelSensor_;
+    std::shared_ptr<MoistureSensor> moistureSensor_;
+    std::shared_ptr<WaterLevelSensor> waterLevelSensor_;
 #else
-    MoistureSensorMock* moistureSensor_;
-    WaterLevelSensorMock* waterLevelSensor_;
+    std::shared_ptr<MoistureSensorMock> moistureSensor_;
+    std::shared_ptr<WaterLevelSensorMock> waterLevelSensor_;
 #endif
 };
 

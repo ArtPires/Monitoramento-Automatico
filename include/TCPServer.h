@@ -1,16 +1,17 @@
-#ifndef _TCP_SERVER_H_
-#define _TCP_SERVER_H_
+#ifndef TCPSERVER_H
+#define TCPSERVER_H
 
-#include <thread>
-#include <functional>
 #include <string>
+#include <functional>
+#include <thread>
 #include <atomic>
-#include <mutex>
+
+#include "Commons.h"
+
+using CommandHandler = std::function<void(const std::string&)>;
 
 class TcpServer {
 public:
-    using CommandHandler = std::function<void(const std::string&)>;
-
     TcpServer(int port, CommandHandler handler);
     ~TcpServer();
 
@@ -18,15 +19,14 @@ public:
     void stop();
 
 private:
-    int port_;
-    int server_fd_;
-    std::thread server_thread_;
-    std::atomic<bool> is_running_;
-    CommandHandler handler_;
-    std::mutex socket_mutex_;
-
     void run();
     void handleClient(int client_socket);
+
+    int port_;
+    CommandHandler handler_;
+    std::atomic<bool> is_running_;
+    int server_fd_;
+    std::thread server_thread_;
 };
 
-#endif //_TCP_SERVER_H_
+#endif // TCPSERVER_H

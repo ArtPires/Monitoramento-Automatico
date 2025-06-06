@@ -1,16 +1,17 @@
 #include "WaterPumpManager.h"
 
 WaterPumpManager::WaterPumpManager(){
+    Log::info("Starting WaterPumpManager...");
 #ifdef __aarch64__
-    waterPump_ = new WaterPump();
+    waterPump_ = std::make_shared<WaterPump>();
 #else
-    waterPump_ = new WaterPumpMock();
+    waterPump_ = std::make_shared<WaterPumpMock>();
     Log::debug("Using WaterPump in Mock mode!");
 #endif
 };
 
 WaterPumpManager::~WaterPumpManager(){
-    delete (waterPump_);
+    Log::info("WaterPumpManager Stopped!");
 };
 
 void WaterPumpManager::activate(){

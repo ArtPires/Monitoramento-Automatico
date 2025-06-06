@@ -24,9 +24,9 @@ public:
 private:
     WaterPumpStatus waterPumpStatus_;
 #ifdef __aarch64__ 
-    WaterPump* waterPump_;
+    std::shared_ptr<WaterPump> waterPump_;
 #else
-    WaterPumpMock* waterPump_;
+    std::shared_ptr<WaterPumpMock> waterPump_;
 #endif
 };
 
