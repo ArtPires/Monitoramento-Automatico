@@ -23,9 +23,8 @@ inline int digitalRead(int) { return 0; }
 
 #define WATER_PUMP 0 // GPIO WiringPi 0 | Raspberry Pi pin 11
 
-// TODO(artur.pires): Change pins to I2C pin (WiringPi 8 / Raspberry Pi pin 3)
-#define MOISTURE_SENSOR 2 // GPIO WiringPi 2 | Raspberry Pi pin 13
-#define WATER_LEVEL_SENSOR 8 // GPIO WiringPi 2 | Raspberry Pi pin 13
+#define MOISTURE_SENSOR "/dev/moisture_sensor"
+#define WATER_LEVEL_SENSOR "/dev/water_level_sensor"
 
 #define ACTIVATE 1
 #define DEACTIVATE 0
@@ -42,6 +41,11 @@ enum WaterLevel : uint8_t{
     LOWER,
     MEDIUM,
     FULL
+};
+
+struct SystemConfig {
+    int moisture_treshold = 0;
+    int water_level_treshold = 0;
 };
 
 static uint8_t systemStatus_ = SystemStatus::STARTING;

@@ -7,7 +7,25 @@
 #include "WaterPumpManager.h"
 #include "TCPServer.h"
 
+#include <nlohmann/json.hpp>
+
 #define NO_ARGS 1
+
+using json = nlohmann::json;
+
+void getConfigFromFile(SystemConfig* systemConfig){
+    std::ifstream arquivo("/config_files/config.json");
+    if (!arquivo.is_open()) {
+        std::cerr << "Erro ao abrir config.json\n";
+        return;
+    }
+
+    json cfg;
+    arquivo >> cfg;
+
+    systemConfig->moisture_treshold = cfg["moisture_treshold"];
+    systemConfig->water_level_treshold = cfg["water_level_treshold"];
+}
 
 void parseArgs(int argc, char* argv[]) {
     int opt;
@@ -25,48 +43,28 @@ void parseArgs(int argc, char* argv[]) {
     }
 }
 
-int read_sensor(const char* device_path) {
-    int fd = open(device_path, O_RDONLY);
-    if (fd < 0) {
-        std::cerr << "Erro ao abrir " << device_path << ": " << strerror(errno) << std::endl;
-        return -1;
-    }
-
-    char buf[32];
-    ssize_t bytes_read = read(fd, buf, sizeof(buf) - 1);
-    if (bytes_read < 0) {
-        std::cerr << "Erro ao ler " << device_path << ": " << strerror(errno) << std::endl;
-        close(fd);
-        return -1;
-    }
-
-    buf[bytes_read] = '\0';
-
-    int value = std::stoi(buf); 
-
-    close(fd);
-    return value;
-}
-
 int main(int argc, char* argv[]) {
     backward::SignalHandling sh;
 
     parseArgs(argc, argv);
+
+    SystemConfig systemConfig;
+    getConfigFromFile(&systemConfig);
 
     Log::setLogFile(LOG_FILE_PATH);
 
     auto waterPumpManager = std::make_unique<WaterPumpManager>();
 
     auto sensorManager = std::make_unique<SensorManager>();
-    //sensorManager->ConfigureSensors();
+    sensorManager->ConfigureSensors();
     
     systemStatus_ = SystemStatus::RUNNING;
     
-    //for (auto& s : sensorManager->GetAllSensorsStatus()) {
-    //    if (s.status != SystemStatus::RUNNING) {
-    //        systemStatus_ = s.status;
-    //    }
-    //}
+    for (auto& s : sensorManager->GetAllSensorsStatus()) {
+        if (s.status != SystemStatus::RUNNING) {
+            systemStatus_ = s.status;
+        }
+    }
 
     auto commandHandler = [&waterPumpManager](const std::string& cmd) {
         if (cmd == "activate") {
@@ -75,6 +73,8 @@ int main(int argc, char* argv[]) {
             waterPumpManager->deactivate();
         } else if (cmd == "stop") {
             systemStatus_ = SystemStatus::STOPPING;
+        } else if (cmd == "status") {
+            // TODO(artur.pires): implement a function to send all status back to client
         } else {
             Log::warning("Unknown command: " + cmd);
         }
@@ -84,13 +84,13 @@ int main(int argc, char* argv[]) {
     server.start();
 
     while (systemStatus_ == SystemStatus::RUNNING) {
-        int soil = read_sensor("/dev/soil_sensor");    // Sensor umidade (AIN0)
-        int water = read_sensor("/dev/water_level_sensor");   // Sensor bóia (AIN1)
+        int moisture = sensorManager->readMoisture();
+        int water = sensorManager->readWaterLevel();
 
-        std::cout << "Umidade do solo: " << soil << std::endl;
+        std::cout << "Umidade do solo: " << moisture << std::endl;
         std::cout << "Nível da água: " << water << std::endl;
 
-        if (soil >= 17000 && water <= 20000) {
+        if (moisture >= systemConfig.moisture_treshold && water <= systemConfig.water_level_treshold) {
             waterPumpManager->activate();
         } else {
             waterPumpManager->deactivate();
