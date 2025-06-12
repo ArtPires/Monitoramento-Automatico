@@ -22,6 +22,10 @@ RUN apt update && apt install -y \
     nano \
     python3 \
     python3-pip \
+    libdw-dev \
+    libbfd-dev \
+    binutils-dev \
+    libunwind-dev \
     && apt clean
 
 # Variáveis do toolchain
