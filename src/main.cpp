@@ -33,6 +33,8 @@ int main(int argc, char* argv[]) {
 
     Log::setLogFile(LOG_FILE_PATH);
 
+    system("sudo modprobe i2c-dev");
+
     auto waterPumpManager = std::make_unique<WaterPumpManager>();
 
     auto sensorManager = std::make_unique<SensorManager>();
@@ -64,20 +66,17 @@ int main(int argc, char* argv[]) {
     ADS1115 adc;
 
     while (systemStatus_ == SystemStatus::RUNNING) {
-        int soil = adc.readChannel(0);    // Sensor umidade (AIN0)
-        int water = adc.readChannel(1);   // Sensor bóia (AIN1)
+        int soil = adc.readChannel(1);    // Sensor umidade (AIN0)
+        int water = adc.readChannel(0);   // Sensor bóia (AIN1)
 
         std::cout << "Umidade do solo: " << soil << std::endl;
         std::cout << "Nível da água: " << water << std::endl;
-        
-        //uint8_t moisture = sensorManager->readMoisture();
-        //uint8_t waterLevel = sensorManager->readWaterLevel();
 
-        //if (moisture >= 127 && waterLevel >= 127) {
-        //    waterPumpManager->activate();
-        //} else {
-        //    waterPumpManager->deactivate();
-        //}
+        if (soil >= 17000 && water <= 20000) {
+            waterPumpManager->activate();
+        } else {
+            waterPumpManager->deactivate();
+        }
         sleep(1);
     }
 
