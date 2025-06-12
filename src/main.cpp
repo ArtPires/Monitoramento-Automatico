@@ -40,9 +40,9 @@ int read_sensor(const char* device_path) {
         return -1;
     }
 
-    buf[bytes_read] = '\0'; // finaliza string
+    buf[bytes_read] = '\0';
 
-    int value = std::stoi(buf); // converte string para int
+    int value = std::stoi(buf); 
 
     close(fd);
     return value;

@@ -195,5 +195,5 @@ static struct i2c_driver ads1115_driver = {
 module_i2c_driver(ads1115_driver);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Seu Nome");
-MODULE_DESCRIPTION("Driver com dois dispositivos /dev para ADS1115");
+MODULE_AUTHOR("artur.pires");
+MODULE_DESCRIPTION("Driver para ler dispositivos no ADS1115");
