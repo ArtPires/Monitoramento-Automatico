@@ -27,8 +27,8 @@ inline int digitalRead(int) { return 0; }
 #define MOISTURE_SENSOR 2 // GPIO WiringPi 2 | Raspberry Pi pin 13
 #define WATER_LEVEL_SENSOR 8 // GPIO WiringPi 2 | Raspberry Pi pin 13
 
-#define ACTIVATE 0
-#define DEACTIVATE 1
+#define ACTIVATE 1
+#define DEACTIVATE 0
 
 enum SystemStatus : uint8_t {
     STARTING,

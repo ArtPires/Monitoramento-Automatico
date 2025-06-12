@@ -6,7 +6,6 @@
 #include "SensorManager.h"
 #include "WaterPumpManager.h"
 #include "TCPServer.h"
-#include "ads1115.h"
 
 #define NO_ARGS 1
 
@@ -26,14 +25,35 @@ void parseArgs(int argc, char* argv[]) {
     }
 }
 
+int read_sensor(const char* device_path) {
+    int fd = open(device_path, O_RDONLY);
+    if (fd < 0) {
+        std::cerr << "Erro ao abrir " << device_path << ": " << strerror(errno) << std::endl;
+        return -1;
+    }
+
+    char buf[32];
+    ssize_t bytes_read = read(fd, buf, sizeof(buf) - 1);
+    if (bytes_read < 0) {
+        std::cerr << "Erro ao ler " << device_path << ": " << strerror(errno) << std::endl;
+        close(fd);
+        return -1;
+    }
+
+    buf[bytes_read] = '\0'; // finaliza string
+
+    int value = std::stoi(buf); // converte string para int
+
+    close(fd);
+    return value;
+}
+
 int main(int argc, char* argv[]) {
     backward::SignalHandling sh;
 
     parseArgs(argc, argv);
 
     Log::setLogFile(LOG_FILE_PATH);
-
-    system("sudo modprobe i2c-dev");
 
     auto waterPumpManager = std::make_unique<WaterPumpManager>();
 
@@ -63,11 +83,9 @@ int main(int argc, char* argv[]) {
     TcpServer server(8080, commandHandler);
     server.start();
 
-    ADS1115 adc;
-
     while (systemStatus_ == SystemStatus::RUNNING) {
-        int soil = adc.readChannel(1);    // Sensor umidade (AIN0)
-        int water = adc.readChannel(0);   // Sensor bóia (AIN1)
+        int soil = read_sensor("/dev/soil_sensor");    // Sensor umidade (AIN0)
+        int water = read_sensor("/dev/water_level_sensor");   // Sensor bóia (AIN1)
 
         std::cout << "Umidade do solo: " << soil << std::endl;
         std::cout << "Nível da água: " << water << std::endl;
