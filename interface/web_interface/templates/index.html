@@ -4,36 +4,75 @@
   <meta charset="UTF-8">
   <title>Sistema de Irrigação TCP</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="bg-green-50 text-gray-800">
+
   <div class="container">
-    <header>
-      <h1>🌿 Sistema de Irrigação TCP</h1>
+    <header class="titulo">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Sistema de Irrigação TCP
+      </h1>
     </header>
 
-    <section class="status">
-      <div>💧 Umidade: <span id="moisture">--%</span></div>
-      <div>🚰 Nível do Reservatório: <span id="reservoir">---</span></div>
-      <div>⚙️ Bomba: <span id="pump">---</span></div>
-      <div>🌐 Sistema: <span id="system">---</span></div>
-      <div>📊 Última ativação da bomba: <span id="activations">---</span></div>
-    </section>
-
-
-    <section class="commands">
-      <h2>🧭 Comandos</h2>
-      <div class="button-group">
-        <button onclick="sendCommand('reboot')"> REINICIAR</button>
-        <button onclick="sendCommand('activate')">💦 REGAR</button>
-        <button onclick="sendCommand('deactivate')">🛑 PARAR</button>
+    <section class="info">
+      <div class="info-card">
+        <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 2C8 10 4 12 4 16a8 8 0 0016 0c0-4-4-6-8-14z"/></svg> Umidade:</span>
+        <span id="moisture">--%</span>
+      </div>
+      <div class="info-card">
+        <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3z"/></svg> Reservatório:</span>
+        <span id="reservoir">---</span>
+      </div>
+      <div class="info-card">
+        <span><svg class="icon" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Bomba:</span>
+        <span id="pump">---</span>
+      </div>
+      <div class="info-card">
+        <span><svg class="icon" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Sistema:</span>
+        <span id="system">---</span>
+      </div>
+      <div class="info-card">
+        <span><svg class="icon" viewBox="0 0 24 24"><path d="M8 7v10l8-5z"/></svg> Última ativação:</span>
+        <span id="activations">---</span>
       </div>
     </section>
 
-    <section class="response">
-      <h2>📥 Última Resposta</h2>
-      <div id="last-response">Aguardando comando...</div>
+    <section class="comandos">
+      <h2>
+        <svg class="icon icon-green" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        Comandos
+      </h2>
+      <div class="botoes">
+        <button onclick="sendCommand('reboot')" class="botao amarelo">
+          <svg class="icon-btn" viewBox="0 0 24 24"><path d="M4.93 4.93a10 10 0 0114.14 0M12 2v5"/></svg>
+          Reiniciar
+        </button>
+        <button onclick="sendCommand('activate')" class="botao azul">
+          <svg class="icon-btn" viewBox="0 0 24 24"><path d="M12 2C8 10 4 12 4 16a8 8 0 0016 0c0-4-4-6-8-14z"/></svg>
+          Regar
+        </button>
+        <button onclick="sendCommand('deactivate')" class="botao vermelho">
+          <svg class="icon-btn" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+          Parar
+        </button>
+      </div>
+    </section>
+
+    <section class="resposta">
+      <h2>
+        <svg class="icon icon-green" viewBox="0 0 24 24"><path d="M4 4h16v2H4zM4 9h10v2H4zM4 14h16v2H4zM4 19h10v2H4z"/></svg>
+        Última Resposta
+      </h2>
+      <div id="last-response" class="output">
+        Aguardando comando...
+      </div>
     </section>
   </div>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </body>
 </html>
