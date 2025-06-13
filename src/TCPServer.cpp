@@ -90,22 +90,19 @@ void TcpServer::handleClient(int client_socket) {
         buffer[valread] = '\0';
         std::string command(buffer);
 
-        // Remove espaços e quebras de linha no início e fim
         command.erase(0, command.find_first_not_of(" \r\n"));
         command.erase(command.find_last_not_of(" \r\n") + 1);
 
         Log::debug("Command received: " + command);
 
-        // Obtem a resposta do handler
         std::string response = handler_(command);
 
-        // Envia a resposta para o cliente
         if (!response.empty()) {
             ssize_t sent = send(client_socket, response.c_str(), response.size(), 0);
-            Log::debug("Resposta enviada: " + response);
+            Log::debug("Response send: " + response);
             if (sent == -1) {
                 Log::error("Failed to send response");
-                break; // Pode encerrar conexão se enviar falhar
+                break;
             }
         }
     }
