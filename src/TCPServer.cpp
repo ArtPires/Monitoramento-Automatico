@@ -102,6 +102,7 @@ void TcpServer::handleClient(int client_socket) {
         // Envia a resposta para o cliente
         if (!response.empty()) {
             ssize_t sent = send(client_socket, response.c_str(), response.size(), 0);
+            Log::debug("Resposta enviada: " + response);
             if (sent == -1) {
                 Log::error("Failed to send response");
                 break; // Pode encerrar conexão se enviar falhar
