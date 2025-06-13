@@ -21,7 +21,7 @@ endif()
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/include
-    #${CMAKE_SOURCE_DIR}/test/include
+    ${CMAKE_SOURCE_DIR}/test/include
 )
 
 if(USE_WIRINGPI)
@@ -37,7 +37,7 @@ include_directories(3rdparty/json/include)
 
 file(GLOB_RECURSE SRC_FILES 
     ${CMAKE_SOURCE_DIR}/src/*.cpp
-    #${CMAKE_SOURCE_DIR}/test/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/test/src/*.cpp
 )
 
 add_executable(AutoMonitor ${SRC_FILES})
