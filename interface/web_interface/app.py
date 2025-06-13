@@ -14,10 +14,11 @@ def command():
     result = send_tcp_command(cmd)
     return jsonify({'response': result})
 
-@app.route('/status', methods=['GET'])
+@app.route('/status')
 def status():
+    print('Requisição de status recebida')
     status_data = get_tcp_status()
-    return jsonify({'status': status_data})
+    return jsonify(status_data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

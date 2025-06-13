@@ -28,21 +28,35 @@ function updateStatus() {
 
   fetch('/status')
     .then(response => {
-      console.log('✅ Resposta recebida do servidor (GET /status)');
+      if (!response.ok) throw new Error('Resposta não OK');
       return response.json();
     })
     .then(data => {
       console.log('📥 Dados do status:', data);
-      const text = data.status;
-      const status = parseStatus(text);
-      document.getElementById('moisture').innerText = status.moisture;
-      document.getElementById('reservoir').innerText = status.reservoir;
-      document.getElementById('pump').innerText = status.pump;
-      document.getElementById('system').innerText = status.system;
-      document.getElementById('activations').innerText = status.activations;
+
+      // Umidade do solo
+      document.getElementById('moisture').innerText = data.systemStatus.moisture + '%';
+
+      // Nível do reservatório
+      document.getElementById('reservoir').innerText = data.systemStatus.waterLevel + '%';
+
+      // Status da bomba
+      document.getElementById('pump').innerText = data.waterPump.status;
+
+      // Status do sistema
+      document.getElementById('system').innerText = data.systemStatus.status;
+
+      // Última ativação da bomba: convertendo timestamp para data legível
+      const lastTime = new Date(data.waterPump.lastTimeOk * 1000); // timestamp Unix em ms
+      document.getElementById('activations').innerText = lastTime.toLocaleString();
     })
     .catch(error => {
       console.error('❌ Erro ao obter status:', error);
+      document.getElementById('moisture').innerText = '--%';
+      document.getElementById('reservoir').innerText = '---';
+      document.getElementById('pump').innerText = '---';
+      document.getElementById('system').innerText = '---';
+      document.getElementById('activations').innerText = '---';
     });
 }
 
@@ -64,8 +78,10 @@ function parseStatus(text) {
   return status;
 }
 
-// Atualiza status ao carregar a página
 window.addEventListener('DOMContentLoaded', () => {
   console.log('🌐 Página carregada. Atualizando status inicial...');
-  updateStatus();
+  updateStatus(); // primeira atualização
+
+  // atualiza a cada 5 minutos
+  setInterval(updateStatus, 5 * 60 * 1000);
 });
