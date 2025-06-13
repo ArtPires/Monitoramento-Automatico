@@ -1,8 +1,10 @@
-# 🌿 Monitoramento Automático de Plantas
+#  Monitoramento Automático
 
-Este projeto é um sistema de monitoramento automático de plantas, desenvolvido para coletar e analisar dados ambientais, como temperatura, umidade e luminosidade, visando otimizar o cuidado com as plantas.
+Sistema embarcado com Raspberry Pi para monitoramento de umidade do solo e nível de água. Aciona automaticamente uma bomba d'água com base nas leituras dos sensores, ideal para sistemas de irrigação automatizados de baixo custo.
 
-## 📦 Estrutura do Projeto
+---
+
+##  Estrutura do Projeto
 
 O repositório contém os seguintes diretórios e arquivos principais:
 
@@ -14,46 +16,61 @@ O repositório contém os seguintes diretórios e arquivos principais:
 - `.gitmodules`: Configurações de submódulos Git.
 - `.gitignore`: Arquivos e pastas ignorados pelo Git.
 
-## 🚀 Como Executar
+---
 
-Para compilar e executar o projeto, siga os passos abaixo:
+##  Funcionalidades
 
-1. Clone o repositório:
+- Leitura de umidade do solo com higrômetro via ADS1115 (conversor A/D)
+- Verificação do nível de água com micro boia IP67
+- Acionamento automático de bomba submersível via módulo relé
+- Interface web para visualização em tempo real dos dados do sistema
+
+---
+
+##  Componentes Utilizados
+
+- 1x **Raspberry Pi 3B (4GB RAM)**
+- 1x **Sensor de umidade do solo (higrômetro)**
+- 1x **Conversor analógico-digital ADS1115**
+- 1x **Micro boia IP67 com cabo (sensor de nível de água)**
+- 1x **Módulo relé de 1 canal (5V)**
+- 1x **Mini bomba submersível para água**
+- Jumpers, fios, fonte de alimentação 5V
+
+---
+
+##  Instalação e Execução
+
+1. **Clone o repositório**
    ```bash
    git clone https://github.com/ArtPires/Monitoramento-Automatico.git
    cd Monitoramento-Automatico
    ```
 
-2. Compile a biblioteca WiringPi (necessária para interação com hardware):
+2. **Instale as dependências**
    ```bash
-   ./compileWiringPi.sh
+   pip install -r requirements.txt
    ```
 
-3. Compile o projeto utilizando CMake:
+3. **Conecte os componentes conforme o esquema elétrico**
+  
+   Disponivel na documentação.
+
+4. **Execute o sistema**
    ```bash
-   mkdir build
-   cd build
-   cmake ..
-   make
+   python main.py
    ```
 
-4. Execute o programa:
-   ```bash
-   ./Monitoramento-Automatico
-   ```
 
-## 🛠️ Dependências
+##  Como Funciona
 
-Certifique-se de que as seguintes dependências estão instaladas no seu sistema:
+- O sistema lê a umidade do solo e o nível da água em intervalos regulares.
 
-- [WiringPi](http://wiringpi.com/): Biblioteca para controle de GPIO em Raspberry Pi.
-- CMake: Ferramenta de automação de compilação.
-- Compilador C++ (como g++).
+- Se o solo estiver seco **e** o nível de água estiver suficiente:
 
-## 🤝 Contribuição
+  - A bomba submersível é acionada automaticamente.
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+- O usuário pode acompanhar os dados em tempo real pela interface web.
 
-## 📄 Licença
+---
 
-Este projeto está licenciado sob a [Licença MIT](LICENSE).
