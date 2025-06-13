@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Irrigação TCP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🌿 Sistema de Irrigação TCP</h1>
+    </header>
+
+    <section class="status">
+      <p>💧 Umidade do Solo: <span id="moisture">--%</span></p>
+      <p>🚰 Reservatório: <span id="reservoir">---</span></p>
+      <p>⚙️ Estado da Bomba: <span id="pump">---</span></p>
+      <p>🌐 Sistema: <span id="system">---</span></p>
+      <p>📊 Ativações Hoje: <span id="activations">0</span></p>
+    </section>
+
+    <section class="commands">
+      <h2>🧭 Comandos</h2>
+      <div class="button-group">
+        <button onclick="updateStatus()">✅ STATUS</button>
+        <button onclick="sendCommand('active')">💦 REGAR</button>
+        <button onclick="sendCommand('desactive')">🛑 PARAR</button>
+      </div>
+    </section>
+
+    <section class="response">
+      <h2>📥 Última Resposta</h2>
+      <div id="last-response">Aguardando comando...</div>
+    </section>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
