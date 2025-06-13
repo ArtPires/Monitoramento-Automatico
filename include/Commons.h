@@ -48,7 +48,9 @@ struct SystemConfig {
     uint16_t water_level_treshold = 0;
 };
 
-static uint8_t systemStatus_ = SystemStatus::STARTING;
+static SystemStatus systemStatus_ = SystemStatus::STARTING;
+
+// Utility Functions
 
 inline int wiringpi_to_physical[30] = {
     11, 12, 13, 15, 16, 18, 22, 7, 3, 5,
@@ -66,5 +68,16 @@ inline uint64_t getTimeNow(){
     auto now = std::chrono::system_clock::now();
     return static_cast<uint64_t>(std::chrono::system_clock::to_time_t(now));
 };
+
+inline std::string status_to_string(SystemStatus status) {
+    switch (status) {
+        case STARTING: return "STARTING";
+        case RUNNING:  return "RUNNING";
+        case STOPPING: return "STOPPING";
+        case ERROR:    return "ERROR";
+        default:       return "UNKNOWN";
+    }
+}
+
 
 #endif //_COMMONS_H_

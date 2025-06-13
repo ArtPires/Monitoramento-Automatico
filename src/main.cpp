@@ -27,6 +27,39 @@ void getConfigFromFile(SystemConfig* systemConfig){
     systemConfig->water_level_treshold = cfg["water_level_treshold"];
 }
 
+json buildSystemStatusJson(SystemStatus systemStatus,
+                           uint16_t moisture, uint16_t waterLevel,
+                           const WaterPumpStatus& waterPump,
+                           const SensorStatus& moistureSensor,
+                           const SensorStatus& waterLevelSensor) {
+    json root;
+
+    root["systemStatus"] = {
+        {"status", status_to_string(systemStatus)},
+        {"moisture", moisture},
+        {"waterLevel", waterLevel}
+    };
+
+    root["waterPump"] = {
+        {"status", status_to_string(waterPump.status)},
+        {"lastTimeOk", waterPump.lastTimeOk}
+    };
+
+    root["moistureSensor"] = {
+        {"name", moistureSensor.sensorName},
+        {"status", status_to_string(moistureSensor.status)},
+        {"lastTimeOk", moistureSensor.lastTimeOk}
+    };
+
+    root["waterLevelSensor"] = {
+        {"name", waterLevelSensor.sensorName},
+        {"status", status_to_string(waterLevelSensor.status)},
+        {"lastTimeOk", waterLevelSensor.lastTimeOk}
+    };
+
+    return root;
+}
+
 void parseArgs(int argc, char* argv[]) {
     int opt;
 
@@ -66,18 +99,32 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    auto commandHandler = [&waterPumpManager](const std::string& cmd) {
+    auto commandHandler = [&waterPumpManager, &sensorManager](const std::string& cmd) -> std::string {
         if (cmd == "activate") {
             waterPumpManager->activate();
+            return "Water Pump activated!";
         } else if (cmd == "deactivate") {
             waterPumpManager->deactivate();
+            return "Water Pump deactivated!";
         } else if (cmd == "reboot") {
-            // TODO(artur.pires): implement reboot
+            systemStatus_ = SystemStatus::STOPPING;
+            return "Rebooting system...";
         } else if (cmd == "status") {
-            // TODO(artur.pires): implement a function to send all status back to client
+            uint16_t moisture = sensorManager->readMoisture();
+            usleep(150000);
+            uint16_t waterLevel = sensorManager->readWaterLevel();
+
+            WaterPumpStatus waterPumpStatus = waterPumpManager->GetWaterPumpStatus();
+            SensorStatus moistureStatus = sensorManager->GetMoistureSensorStatus();
+            SensorStatus waterLevelStatus = sensorManager->GetWaterLevelSensorStatus();
+
+            json statusJson = buildSystemStatusJson(systemStatus_, moisture, waterLevel, waterPumpStatus, moistureStatus, waterLevelStatus);
+            return statusJson.dump(4);
         } else {
             Log::warning("Unknown command: " + cmd);
+            return "Unknown command: " + cmd;
         }
+        return "";
     };
 
     TcpServer server(8080, commandHandler);
@@ -99,7 +146,7 @@ int main(int argc, char* argv[]) {
         sleep(1);
     }
 
-    Log::info("SystemStatus: " + std::to_string(systemStatus_));
+    Log::info("SystemStatus: " + status_to_string(systemStatus_));
     Log::info("Finishing AutoMonitor...");
 
     return 0;
