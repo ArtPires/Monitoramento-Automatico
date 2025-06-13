@@ -4,7 +4,7 @@ Sistema embarcado com Raspberry Pi para monitoramento de umidade do solo e níve
 
 ---
 
-## 📦 Estrutura do Projeto
+##  Estrutura do Projeto
 
 O repositório contém os seguintes diretórios e arquivos principais:
 
