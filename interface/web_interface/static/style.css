@@ -1,0 +1,68 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #e8f5e9;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 30px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+  text-align: center;
+  color: #2e7d32;
+}
+
+.status p {
+  font-size: 1.1rem;
+  margin: 8px 0;
+}
+
+.commands h2, .response h2 {
+  margin-top: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 12px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #66bb6a;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button-group button:nth-child(2) {
+  background-color: #29b6f6;
+}
+.button-group button:nth-child(3) {
+  background-color: #ef5350;
+}
+
+.button-group button:hover {
+  filter: brightness(0.9);
+}
+
+#last-response {
+  background-color: #f0f0f0;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-family: monospace;
+}
