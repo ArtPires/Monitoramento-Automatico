@@ -5,3 +5,7 @@
 [submodule "backward-cpp"]
 	path = 3rdparty/backward-cpp
 	url = https://github.com/bombela/backward-cpp.git
+
+[submodule "backward-cpp"]
+	path = 3rdparty/json
+	url = https://github.com/nlohmann/json.git

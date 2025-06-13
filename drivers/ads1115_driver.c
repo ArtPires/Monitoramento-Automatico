@@ -10,7 +10,7 @@
 
 #define DEVICE_NAME "ads1115"
 #define CLASS_NAME "ads1115_class"
-#define SOIL_SENSOR_MINOR 1
+#define MOISTURE_SENSOR_MINOR 1
 #define WATER_SENSOR_MINOR 0
 #define NUM_DEVICES 2
 
@@ -86,7 +86,7 @@ static ssize_t ads1115_read(struct file* file, char __user* buf, size_t count, l
         return 0;
 
     switch (minor) {
-        case SOIL_SENSOR_MINOR:
+        case MOISTURE_SENSOR_MINOR:
             value = ads1115_read_channel(0); // Canal 0
             break;
         case WATER_SENSOR_MINOR:
@@ -144,10 +144,10 @@ static int ads1115_probe(struct i2c_client* client)
         goto del_cdev;
     }
 
-    devices[SOIL_SENSOR_MINOR] = device_create(ads1115_class, NULL, MKDEV(major, SOIL_SENSOR_MINOR), NULL, "soil_sensor");
+    devices[MOISTURE_SENSOR_MINOR] = device_create(ads1115_class, NULL, MKDEV(major, MOISTURE_SENSOR_MINOR), NULL, "moisture_sensor");
     devices[WATER_SENSOR_MINOR] = device_create(ads1115_class, NULL, MKDEV(major, WATER_SENSOR_MINOR), NULL, "water_level_sensor");
 
-    if (IS_ERR(devices[SOIL_SENSOR_MINOR]) || IS_ERR(devices[WATER_SENSOR_MINOR])) {
+    if (IS_ERR(devices[MOISTURE_SENSOR_MINOR]) || IS_ERR(devices[WATER_SENSOR_MINOR])) {
         err = -EINVAL;
         goto destroy_class;
     }
@@ -156,7 +156,7 @@ static int ads1115_probe(struct i2c_client* client)
     return 0;
 
 destroy_class:
-    device_destroy(ads1115_class, MKDEV(major, SOIL_SENSOR_MINOR));
+    device_destroy(ads1115_class, MKDEV(major, MOISTURE_SENSOR_MINOR));
     device_destroy(ads1115_class, MKDEV(major, WATER_SENSOR_MINOR));
     class_destroy(ads1115_class);
 del_cdev:
@@ -169,7 +169,7 @@ unregister:
 // Remove: chamado ao remover o módulo
 static void ads1115_remove(struct i2c_client* client)
 {
-    device_destroy(ads1115_class, MKDEV(major, SOIL_SENSOR_MINOR));
+    device_destroy(ads1115_class, MKDEV(major, MOISTURE_SENSOR_MINOR));
     device_destroy(ads1115_class, MKDEV(major, WATER_SENSOR_MINOR));
     class_destroy(ads1115_class);
     cdev_del(&ads1115_cdev);

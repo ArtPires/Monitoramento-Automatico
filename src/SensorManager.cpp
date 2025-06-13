@@ -21,11 +21,11 @@ void SensorManager::ConfigureSensors() {
     waterLevelSensor_->configureSensor();
 };
 
-uint8_t SensorManager::readMoisture() {
+uint16_t SensorManager::readMoisture() {
     return moistureSensor_->readData();
 };
 
-uint8_t SensorManager::readWaterLevel() {
+uint16_t SensorManager::readWaterLevel() {
     return waterLevelSensor_->readData();
 };
 

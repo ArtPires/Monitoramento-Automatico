@@ -32,6 +32,9 @@ endif()
 add_subdirectory(3rdparty/backward-cpp)
 include_directories(3rdparty/backward-cpp)
 
+add_subdirectory(3rdparty/json)
+include_directories(3rdparty/json/include)
+
 file(GLOB_RECURSE SRC_FILES 
     ${CMAKE_SOURCE_DIR}/src/*.cpp
     #${CMAKE_SOURCE_DIR}/test/src/*.cpp
@@ -42,6 +45,7 @@ add_executable(AutoMonitor ${SRC_FILES})
 target_link_libraries(AutoMonitor
     backward            # backward-cpp
     dl                  # para stack trace
+    nlohmann_json::nlohmann_json
     #unwind              # para stack trace
 )
 

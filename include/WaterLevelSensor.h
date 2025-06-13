@@ -8,7 +8,7 @@ public:
     WaterLevelSensor();
     ~WaterLevelSensor();
     virtual void configureSensor();
-    virtual uint8_t readData();
+    virtual uint16_t readData();
     virtual SystemStatus getStatus();
 private:
     SystemStatus waterLevelSensorStatus_;

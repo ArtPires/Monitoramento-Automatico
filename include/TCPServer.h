@@ -8,7 +8,7 @@
 
 #include "Commons.h"
 
-using CommandHandler = std::function<void(const std::string&)>;
+using CommandHandler = std::function<std::string(const std::string&)>;
 
 class TcpServer {
 public:

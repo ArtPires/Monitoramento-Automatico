@@ -8,7 +8,7 @@ public:
     MoistureSensor();
     ~MoistureSensor();
     virtual void configureSensor();
-    virtual uint8_t readData();
+    virtual uint16_t readData();
     virtual SystemStatus getStatus();
 private:
     SystemStatus moistureSensorStatus_;

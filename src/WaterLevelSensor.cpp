@@ -1,3 +1,7 @@
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
 #include "WaterLevelSensor.h"
 
 WaterLevelSensor::WaterLevelSensor() {
@@ -8,15 +12,39 @@ WaterLevelSensor::~WaterLevelSensor() {
     waterLevelSensorStatus_ == SystemStatus::ERROR;
 };
 
-void WaterLevelSensor::configureSensor(){
-    wiringPiSetup();
-    pinMode(WATER_LEVEL_SENSOR, INPUT);
+void WaterLevelSensor::configureSensor() {
+    struct stat info;
+    if (stat(WATER_LEVEL_SENSOR, &info)) {
+        waterLevelSensorStatus_ = SystemStatus::ERROR;
+        Log::error("Could not locate " + std::string(WATER_LEVEL_SENSOR));
+        return;
+    }
+
     waterLevelSensorStatus_ = SystemStatus::RUNNING;
-    Log::info("WATER_LEVEL_SENSOR configured at pin " + get_physical_pin(WATER_LEVEL_SENSOR));
+    Log::info("WATER_LEVEL_SENSOR detected and connected at: " + std::string(WATER_LEVEL_SENSOR));
 };
 
-uint8_t WaterLevelSensor::readData() {
-    return digitalRead(WATER_LEVEL_SENSOR);
+uint16_t WaterLevelSensor::readData() {
+    int fd = open(WATER_LEVEL_SENSOR, O_RDONLY);
+    if (fd < 0) {
+        Log::error("Could not open " + std::string(WATER_LEVEL_SENSOR));
+        return -1;
+    }
+
+    char buf[32];
+    ssize_t bytes_read = read(fd, buf, sizeof(buf) - 1);
+    if (bytes_read < 0) {
+        Log::error("Could not read " + std::string(WATER_LEVEL_SENSOR));
+        close(fd);
+        return -1;
+    }
+
+    buf[bytes_read] = '\0';
+
+    uint16_t value = static_cast<uint16_t>(std::stoi(buf)); 
+
+    close(fd);
+    return value;
 };
 
 SystemStatus WaterLevelSensor::getStatus() {

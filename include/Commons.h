@@ -23,9 +23,8 @@ inline int digitalRead(int) { return 0; }
 
 #define WATER_PUMP 0 // GPIO WiringPi 0 | Raspberry Pi pin 11
 
-// TODO(artur.pires): Change pins to I2C pin (WiringPi 8 / Raspberry Pi pin 3)
-#define MOISTURE_SENSOR 2 // GPIO WiringPi 2 | Raspberry Pi pin 13
-#define WATER_LEVEL_SENSOR 8 // GPIO WiringPi 2 | Raspberry Pi pin 13
+#define MOISTURE_SENSOR "/dev/moisture_sensor"
+#define WATER_LEVEL_SENSOR "/dev/water_level_sensor"
 
 #define ACTIVATE 1
 #define DEACTIVATE 0
@@ -44,7 +43,14 @@ enum WaterLevel : uint8_t{
     FULL
 };
 
-static uint8_t systemStatus_ = SystemStatus::STARTING;
+struct SystemConfig {
+    uint16_t moisture_treshold = 0;
+    uint16_t water_level_treshold = 0;
+};
+
+static SystemStatus systemStatus_ = SystemStatus::STARTING;
+
+// Utility Functions
 
 inline int wiringpi_to_physical[30] = {
     11, 12, 13, 15, 16, 18, 22, 7, 3, 5,
@@ -62,5 +68,16 @@ inline uint64_t getTimeNow(){
     auto now = std::chrono::system_clock::now();
     return static_cast<uint64_t>(std::chrono::system_clock::to_time_t(now));
 };
+
+inline std::string status_to_string(SystemStatus status) {
+    switch (status) {
+        case STARTING: return "STARTING";
+        case RUNNING:  return "RUNNING";
+        case STOPPING: return "STOPPING";
+        case ERROR:    return "ERROR";
+        default:       return "UNKNOWN";
+    }
+}
+
 
 #endif //_COMMONS_H_
