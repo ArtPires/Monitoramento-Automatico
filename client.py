@@ -4,6 +4,14 @@ def send_command(ip, port, command):
     try:
         with socket.create_connection((ip, port), timeout=5) as sock:
             sock.sendall(command.encode('utf-8'))
+            
+            # Recebe a resposta (até 4096 bytes, pode ajustar o tamanho)
+            response = sock.recv(4096)
+            if response:
+                print(f"Resposta do servidor: {response.decode('utf-8')}")
+            else:
+                print("Nenhuma resposta recebida do servidor.")
+            
             print(f"Comando '{command}' enviado com sucesso para {ip}:{port}")
     except Exception as e:
         print(f"Erro ao enviar comando: {e}")

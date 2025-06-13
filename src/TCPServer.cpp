@@ -73,7 +73,7 @@ void TcpServer::run() {
         int new_socket;
         if ((new_socket = accept(server_fd_, (struct sockaddr *)&address,
                                  (socklen_t*)&addrlen)) < 0) {
-            if (!is_running_) break;  // encerrando
+            if (!is_running_) break;
             Log::error("accept failed");
             continue;
         }
@@ -96,7 +96,17 @@ void TcpServer::handleClient(int client_socket) {
 
         Log::debug("Command received: " + command);
 
-        handler_(command);
+        // Obtem a resposta do handler
+        std::string response = handler_(command);
+
+        // Envia a resposta para o cliente
+        if (!response.empty()) {
+            ssize_t sent = send(client_socket, response.c_str(), response.size(), 0);
+            if (sent == -1) {
+                Log::error("Failed to send response");
+                break; // Pode encerrar conexão se enviar falhar
+            }
+        }
     }
 
     shutdown(client_socket, SHUT_RDWR);

@@ -1,6 +1,7 @@
+#include <unistd.h>
+
 #include "WaterPump.h"
 
-// TODO(artur.pires): Add WATER_PUMP number to a config file and pass it by argument at ctor
 WaterPump::WaterPump(){
     wiringPiSetup();
     pinMode(WATER_PUMP, OUTPUT);
@@ -14,7 +15,10 @@ WaterPump::~WaterPump(){
 
 void WaterPump::activate(){
     digitalWrite(WATER_PUMP, ACTIVATE);
-    Log::info("WATER_PUMP ACTIVATE!");
+    Log::info("WATER_PUMP activated for 2 seconds!");
+    sleep(2);
+    digitalWrite(WATER_PUMP, DEACTIVATE);
+    Log::info("WATER_PUMP deactivated!");
 };
 
 void WaterPump::deactivate(){
