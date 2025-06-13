@@ -135,8 +135,8 @@ int main(int argc, char* argv[]) {
         usleep(150000);
         uint16_t water = sensorManager->readWaterLevel();
 
-        Log::debug("Moisture Level: " + moisture);
-        Log::debug("Water Level: " + water);
+        Log::debug("Moisture Level: " + std::to_string(moisture));
+        Log::debug("Water Level: " + std::to_string(water));
 
         if (moisture >= systemConfig.moisture_treshold && water <= systemConfig.water_level_treshold) {
             waterPumpManager->activate();
