@@ -15,8 +15,8 @@ WaterPump::~WaterPump(){
 
 void WaterPump::activate(){
     digitalWrite(WATER_PUMP, ACTIVATE);
-    Log::info("WATER_PUMP activated for 2 seconds!");
-    sleep(2);
+    Log::info("WATER_PUMP activated for 1 second!");
+    sleep(1);
     digitalWrite(WATER_PUMP, DEACTIVATE);
     Log::info("WATER_PUMP deactivated!");
 };
