@@ -44,8 +44,8 @@ enum WaterLevel : uint8_t{
 };
 
 struct SystemConfig {
-    int moisture_treshold = 0;
-    int water_level_treshold = 0;
+    uint16_t moisture_treshold = 0;
+    uint16_t water_level_treshold = 0;
 };
 
 static uint8_t systemStatus_ = SystemStatus::STARTING;

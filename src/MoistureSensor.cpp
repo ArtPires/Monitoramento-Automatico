@@ -14,7 +14,7 @@ MoistureSensor::~MoistureSensor() {
 
 void MoistureSensor::configureSensor() {
     struct stat info;
-    if (!stat(MOISTURE_SENSOR, &info)) {
+    if (stat(MOISTURE_SENSOR, &info)) {
         moistureSensorStatus_ = SystemStatus::ERROR;
         Log::error("Could not locate " + std::string(MOISTURE_SENSOR));
         return;
@@ -24,7 +24,7 @@ void MoistureSensor::configureSensor() {
     Log::info("MOISTURE_SENSOR detected and connected at: " + std::string(MOISTURE_SENSOR));
 };
 
-int MoistureSensor::readData() {
+uint16_t MoistureSensor::readData() {
     int fd = open(MOISTURE_SENSOR, O_RDONLY);
     if (fd < 0) {
         Log::error("Could not open " + std::string(MOISTURE_SENSOR));
@@ -41,7 +41,7 @@ int MoistureSensor::readData() {
 
     buf[bytes_read] = '\0';
 
-    int value = std::stoi(buf); 
+    uint16_t value = static_cast<uint16_t>(std::stoi(buf)); 
 
     close(fd);
     return value;

@@ -27,8 +27,8 @@ public:
     SensorManager();
     ~SensorManager();
     void ConfigureSensors();
-    uint8_t readMoisture();
-    uint8_t readWaterLevel();
+    uint16_t readMoisture();
+    uint16_t readWaterLevel();
     std::array<SensorStatus, NUMBER_OF_SENSORS> GetAllSensorsStatus();
     SensorStatus GetMoistureSensorStatus();
     SensorStatus GetWaterLevelSensorStatus();

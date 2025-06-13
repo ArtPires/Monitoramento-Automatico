@@ -14,7 +14,7 @@ WaterLevelSensor::~WaterLevelSensor() {
 
 void WaterLevelSensor::configureSensor() {
     struct stat info;
-    if (!stat(WATER_LEVEL_SENSOR, &info)) {
+    if (stat(WATER_LEVEL_SENSOR, &info)) {
         waterLevelSensorStatus_ = SystemStatus::ERROR;
         Log::error("Could not locate " + std::string(WATER_LEVEL_SENSOR));
         return;
@@ -24,7 +24,7 @@ void WaterLevelSensor::configureSensor() {
     Log::info("WATER_LEVEL_SENSOR detected and connected at: " + std::string(WATER_LEVEL_SENSOR));
 };
 
-int WaterLevelSensor::readData() {
+uint16_t WaterLevelSensor::readData() {
     int fd = open(WATER_LEVEL_SENSOR, O_RDONLY);
     if (fd < 0) {
         Log::error("Could not open " + std::string(WATER_LEVEL_SENSOR));
@@ -41,7 +41,7 @@ int WaterLevelSensor::readData() {
 
     buf[bytes_read] = '\0';
 
-    int value = std::stoi(buf); 
+    uint16_t value = static_cast<uint16_t>(std::stoi(buf)); 
 
     close(fd);
     return value;
